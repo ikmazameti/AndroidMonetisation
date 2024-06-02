@@ -1,9 +1,18 @@
 package com.devtides.androidmonetisation.util
 
 import android.app.Activity
-import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.SkuDetailsParams
 
-class BillingAgent(private val activity: Activity, private val callback: BillingCallback) : PurchasesUpdatedListener {
+class BillingAgent(private val activity: Activity, private val callback: BillingCallback) :
+    PurchasesUpdatedListener {
 
     private var billingClient = BillingClient.newBuilder(activity).setListener(this).enablePendingPurchases().build()
     private val productsSKUList = listOf("country_view")
@@ -16,13 +25,12 @@ class BillingAgent(private val activity: Activity, private val callback: Billing
             override fun onBillingServiceDisconnected() {
             }
 
-            override fun onBillingSetupFinished(billingResult: BillingResult?) {
-                if (billingResult?.responseCode == BillingClient.BillingResponseCode.OK) {
+            override fun onBillingSetupFinished(billingResult: BillingResult) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     getAvailableProducts()
                     getAvailableSubscriptions()
                 }
             }
-
         })
     }
 
@@ -30,10 +38,6 @@ class BillingAgent(private val activity: Activity, private val callback: Billing
         billingClient.endConnection()
     }
 
-    override fun onPurchasesUpdated(billingResult: BillingResult?, purchases: MutableList<Purchase>?) {
-//        checkProduct(billingResult, purchases)
-        checkSubscription(billingResult, purchases)
-    }
 
     fun checkSubscription(billingResult: BillingResult?, purchases: MutableList<Purchase>?) {
         if (billingResult?.responseCode == BillingClient.BillingResponseCode.OK ||
@@ -128,5 +132,12 @@ class BillingAgent(private val activity: Activity, private val callback: Billing
                 billingClient.launchBillingFlow(activity, billingFlowParams)
             }
         }
+    }
+
+    override fun onPurchasesUpdated(
+        billingResult: BillingResult, purchases: MutableList<Purchase>?
+    ) {
+        checkProduct(billingResult, purchases)
+        checkSubscription(billingResult, purchases)
     }
 }
