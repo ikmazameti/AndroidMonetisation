@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity(), CountryClickListener, CountriesPresent
     private lateinit var rewardedAd: RewardedVideoAd
     private var billingAgent: BillingAgent? = null
     private var clickedCountry: Country? = null
-
     private val presenter = CountriesPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +70,7 @@ class MainActivity : AppCompatActivity(), CountryClickListener, CountriesPresent
     }
 
     private fun showRewardedAd(country: Country) {
-        val listener = object: RewardedVideoAdListener {
+        val listener = object : RewardedVideoAdListener {
             override fun onRewardedVideoAdClosed() {
                 showList()
             }
@@ -132,7 +131,7 @@ class MainActivity : AppCompatActivity(), CountryClickListener, CountriesPresent
         countries?.let {
             for (country in countries) {
                 i++
-                if(i % 5 == 0) {
+                if (i % 5 == 0) {
                     countriesList.add(BannerAd())
                 }
                 countriesList.add(country)

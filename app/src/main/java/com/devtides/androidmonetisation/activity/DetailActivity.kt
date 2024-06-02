@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
 
-    lateinit var country: Country
+    private lateinit var country: Country
     private lateinit var interstitialAd: InterstitialAd
 
     override fun onCreate(savedInstanceState: Bundle?) {
